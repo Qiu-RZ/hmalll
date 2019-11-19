@@ -1,12 +1,10 @@
 <template>
-
-<!-- 路由出口 -->
-  <router-view></router-view>
+<div>我是登录页面的占位符</div>
 </template>
 
 <script>
 export default {
-
+  nama:'login'
 }
 </script>
 
