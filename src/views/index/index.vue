@@ -18,30 +18,35 @@
     <el-container>
       <!-- 左侧栏 -->
       <el-aside width="auto" class="aside">
-        <el-menu default-active="2" class="el-menu-vertical-demo" :collapse="isCollapse">
-          <el-menu-item index="1">
+        <el-menu default-active="2" class="el-menu-vertical-demo" router :collapse="isCollapse">
+          <el-menu-item index="datalint">
             <i class="el-icon-pie-chart"></i>
             <span slot="title">数据概览</span>
           </el-menu-item>
-          <el-menu-item index="2">
+          <el-menu-item index="userlint">
             <i class="el-icon-user"></i>
             <span slot="title">用户列表</span>
           </el-menu-item>
-          <el-menu-item index="3">
+          <el-menu-item index="question">
             <i class="el-icon-edit-outline"></i>
             <span slot="title">题库列表</span>
           </el-menu-item>
-          <el-menu-item index="4">
+          <el-menu-item index="enterprise">
             <i class="el-icon-office-building"></i>
             <span slot="title">企业列表</span>
           </el-menu-item>
-          <el-menu-item index="5">
+          <el-menu-item index="subject">
             <i class="el-icon-notebook-2"></i>
             <span slot="title">学科列表</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main class="Main">Main</el-main>
+      <!-- 主体部分 -->
+      <el-main class="Main">
+       
+       <router-view></router-view>
+
+      </el-main>
     </el-container>
   </el-container>
 </template>
