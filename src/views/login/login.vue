@@ -68,11 +68,10 @@
           <el-upload
             class="avatar-uploader"
             action="http://183.237.67.218:3002/uploads"
-            name='image'
+            name="image"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
-
           >
             <img v-if="imageUrl" :src="imageUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -136,7 +135,12 @@
 
 <script>
 //导入axios
-import axios from "axios";
+//已经全部抽取为方法了,不需要axios
+// import axios from "axios";
+
+import { login, register,sendsms } from "../../api/api.js";
+
+
 export default {
   name: "login",
 
@@ -257,15 +261,21 @@ export default {
           // 验证成功
           // alert("submit!");
           // 接口调用
-          axios({
-            url: "http://183.237.67.218:3002/login",
-            method: "post",
-            data: {
-              phone: this.loginForm.phone,
-              password: this.loginForm.password,
-              code: this.loginForm.captcha
-            },
-            withCredentials: true
+          // axios({
+          //   url: "http://183.237.67.218:3002/login",
+          //   method: "post",
+          //   data: {
+          //     phone: this.loginForm.phone,
+          //     password: this.loginForm.password,
+          //     code: this.loginForm.captcha
+          //   },
+          //   withCredentials: true
+          // });
+
+          login({
+            phone: this.loginForm.phone,
+            password: this.loginForm.password,
+            code: this.loginForm.captcha
           }).then(res => {
             window.console.log(res);
             if (res.data.code == 200) {
@@ -288,7 +298,7 @@ export default {
     //文件上传之后走的回调函数
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
-        // 保存到表单中
+      // 保存到表单中
       this.registerForm.avatar = res.data.file_path;
     },
     //文件上传之前对文件做一些限制
@@ -316,14 +326,19 @@ export default {
         return;
       }
       //获取手机验证发送请求
-      axios({
-        url: "http://183.237.67.218:3002/sendsms",
-        method: "post",
-        data: {
-          code: this.registerForm.code,
-          phone: this.registerForm.phone
-        },
-        withCredentials: true
+      // axios({
+      //   url: "http://183.237.67.218:3002/sendsms",
+      //   method: "post",
+      //   data: {
+      //     code: this.registerForm.code,
+      //     phone: this.registerForm.phone
+      //   },
+      //   withCredentials: true
+      // });
+
+      sendsms({
+        code: this.registerForm.code,
+        phone: this.registerForm.phone
       }).then(res => {
         //成功回调
         window.console.log(res);
@@ -353,24 +368,33 @@ export default {
       this.$refs.registerForm.validate(valid => {
         if (valid) {
           //  window.console.log(valid);
-          axios({
-            url: "http://183.237.67.218:3002/register",
-            method: "post",
-            data: {
-              avatar: this.registerForm.avatar,
-              email: this.registerForm.email,
-              name: this.registerForm.name,
-              password: this.registerForm.password,
-              phone: this.registerForm.phone,
-              rcode: this.registerForm.rcode
-            }
+          // axios({
+          //   url: "http://183.237.67.218:3002/register",
+          //   method: "post",
+          //   data: {
+          //     avatar: this.registerForm.avatar,
+          //     email: this.registerForm.email,
+          //     name: this.registerForm.name,
+          //     password: this.registerForm.password,
+          //     phone: this.registerForm.phone,
+          //     rcode: this.registerForm.rcode
+          //   }
+          // });
+
+          register({
+            avatar: this.registerForm.avatar,
+            email: this.registerForm.email,
+            name: this.registerForm.name,
+            password: this.registerForm.password,
+            phone: this.registerForm.phone,
+            rcode: this.registerForm.rcode
           }).then(res => {
             //成功回调
             window.console.log(res);
-            alert('成功')
+            alert("成功");
           });
-        }else{
-           // 验证失败
+        } else {
+          // 验证失败
           window.console.log("error submit!!");
           return false;
         }

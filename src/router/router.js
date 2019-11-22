@@ -8,6 +8,8 @@ Vue.use(VueRouter);
 
 //导入登录页面组件
 import login from '../views/login/login.vue'
+//导入首页页面的组件
+import index from '../views/index/index.vue'
 
 //路由规则
 const routes = [
@@ -15,6 +17,11 @@ const routes = [
         path:'/login',
         component:login
     },
+    {
+        path:'/index',
+        component:index
+    },
+    
 ];
 
 //创建路由实例
