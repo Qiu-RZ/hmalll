@@ -348,7 +348,7 @@ export default {
         phone: this.registerForm.phone
       }).then(res => {
         //成功回调
-        window.console.log(res);
+        // window.console.log(res);
       });
 
       let time = 60;
@@ -397,7 +397,7 @@ export default {
             rcode: this.registerForm.rcode
           }).then(res => {
             //成功回调
-            window.console.log(res);
+            // window.console.log(res);
             alert("成功");
 
           });

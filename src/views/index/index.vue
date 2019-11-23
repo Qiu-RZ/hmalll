@@ -12,7 +12,7 @@
       <div class="right">
         <img class="index-icon" src="../../assets/index-icon.jpg" alt />
         <span class="index-name">近来可好</span>
-        <el-button type="primary" size="mini">退出2</el-button>
+        <el-button type="primary" size="mini" @click="logout">退出</el-button>
       </div>
     </el-header>
     <el-container>
@@ -46,6 +46,7 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
+
       <!-- 主体部分 -->
       <el-main class="Main">
         <router-view></router-view>
@@ -56,7 +57,9 @@
 
 <script>
 //导入抽取的token方法
-import { getToken } from "../../utils/token.js";
+import { getToken,removeToken } from "../../utils/token.js";
+//导入用户信息
+import { userInfo } from '../../api/api.js'
 export default {
   name: "index",
 
@@ -75,7 +78,37 @@ export default {
       //跳转回登录页面
       this.$router.push("/login");
     }
-  }
+  },
+
+  //创建钩子
+  created() {
+    userInfo().then(res=>{
+      
+      window.comsole.log(res)
+    })
+  },
+
+  methods: {
+    //退出登陆
+    logout(){
+        this.$confirm('即将退出登录,你确定吗...小老弟?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          //删除token
+        removeToken()
+      //跳转回login
+        this.$router.push('/login')
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消退出'
+          });          
+        });
+    }
+  },
+  
 };
 </script>
 
