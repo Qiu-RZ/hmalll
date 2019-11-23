@@ -140,6 +140,9 @@
 
 import { login, register,sendsms } from "../../api/api.js";
 
+//导入抽取的token方法
+import {setToken} from '../../utils/token.js'
+
 
 export default {
   name: "login",
@@ -281,6 +284,10 @@ export default {
             if (res.data.code == 200) {
               // 成功
               this.$message.success("你可算回来啦！");
+              //跳转到首页
+              this.$router.push('./index');
+              //保存token
+              setToken(res.data.data.token)
             } else {
               // 失败
               this.$message.warning("登录失败了哦");
@@ -392,6 +399,7 @@ export default {
             //成功回调
             window.console.log(res);
             alert("成功");
+
           });
         } else {
           // 验证失败

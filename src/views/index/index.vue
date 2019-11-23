@@ -18,7 +18,12 @@
     <el-container>
       <!-- 左侧栏 -->
       <el-aside width="auto" class="aside">
-        <el-menu default-active="/index/datalint" class="el-menu-vertical-demo" router :collapse="isCollapse">
+        <el-menu
+          default-active="/index/datalint"
+          class="el-menu-vertical-demo"
+          router
+          :collapse="isCollapse"
+        >
           <el-menu-item index="/index/datalint">
             <i class="el-icon-pie-chart"></i>
             <span slot="title">数据概览</span>
@@ -43,15 +48,15 @@
       </el-aside>
       <!-- 主体部分 -->
       <el-main class="Main">
-       
-       <router-view></router-view>
-
+        <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
+//导入抽取的token方法
+import { getToken } from "../../utils/token.js";
 export default {
   name: "index",
 
@@ -59,6 +64,17 @@ export default {
     return {
       isCollapse: false
     };
+  },
+  //生命周期钩子
+  beforeCreate() {
+    const token = getToken();
+    //判断token有没有
+    if (!token) {
+      //提示用户
+      this.$message.error("小老弟你还没有登录哦");
+      //跳转回登录页面
+      this.$router.push("/login");
+    }
   }
 };
 </script>
@@ -80,7 +96,6 @@ export default {
       }
       .rotate {
         transform: rotate(-90deg);
-        
       }
       .logo {
         width: 33px;
