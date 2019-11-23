@@ -84,7 +84,7 @@ export default {
   created() {
     userInfo().then(res=>{
       
-      window.comsole.log(res)
+      window.console.log(res)
     })
   },
 

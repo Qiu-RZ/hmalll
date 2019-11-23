@@ -1,18 +1,19 @@
 //导入axios
-import axios from 'axios'
+import axios from 'axios';
 
 // 导入 token获取方法
-import { getToken,setToken } from ''
+import { getToken,removeToken } from '../utils/token.js';
 // 导入 element-ui的弹框
-import Massage from 'elenemt-ui'
+import { Message } from 'element-ui';
 //导入Vue
-import Vue from 'vue'
-Vue.use(Massage)
+import Vue from 'vue';
+
+Vue.use(Message);
 //导入路由
-import router from '../router/router.js'
+import router from '../router/router.js';
 
 //统一基地址
-axios.defaults.baseURL = 'http://183.237.67.218:3002'
+axios.defaults.baseURL = 'http://183.237.67.218:3002';
 // 统一设置 跨域携带cookie
 axios.defaults.withCredentials = true;
 
@@ -41,7 +42,7 @@ axios.interceptors.request.use(
       // 判断token
       if (response.data.code === 0) {
           // 提示
-          Message.error('小老弟，伪造token，牛逼啊！')
+          Message.error('醒目一点ok???')
         // 删除token
         removeToken();
         // 去登录页
