@@ -12,30 +12,30 @@
       <div class="right">
         <img class="index-icon" src="../../assets/index-icon.jpg" alt />
         <span class="index-name">近来可好</span>
-        <el-button type="primary" size="mini">主要按钮</el-button>
+        <el-button type="primary" size="mini">退出2</el-button>
       </div>
     </el-header>
     <el-container>
       <!-- 左侧栏 -->
       <el-aside width="auto" class="aside">
-        <el-menu default-active="2" class="el-menu-vertical-demo" router :collapse="isCollapse">
-          <el-menu-item index="datalint">
+        <el-menu default-active="/index/datalint" class="el-menu-vertical-demo" router :collapse="isCollapse">
+          <el-menu-item index="/index/datalint">
             <i class="el-icon-pie-chart"></i>
             <span slot="title">数据概览</span>
           </el-menu-item>
-          <el-menu-item index="userlint">
+          <el-menu-item index="/index/userlint">
             <i class="el-icon-user"></i>
             <span slot="title">用户列表</span>
           </el-menu-item>
-          <el-menu-item index="question">
+          <el-menu-item index="/index/question">
             <i class="el-icon-edit-outline"></i>
             <span slot="title">题库列表</span>
           </el-menu-item>
-          <el-menu-item index="enterprise">
+          <el-menu-item index="/index/enterprise">
             <i class="el-icon-office-building"></i>
             <span slot="title">企业列表</span>
           </el-menu-item>
-          <el-menu-item index="subject">
+          <el-menu-item index="/index/subject">
             <i class="el-icon-notebook-2"></i>
             <span slot="title">学科列表</span>
           </el-menu-item>

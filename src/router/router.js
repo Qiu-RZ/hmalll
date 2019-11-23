@@ -3,8 +3,15 @@ import VueRouter from 'vue-router'
 
 //导入Vue
 import Vue from 'vue'
+
 //使用
 Vue.use(VueRouter);
+
+// 解决重复点击导航栏报错问题
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location){
+   return originalPush.call(this,location).catch(err=>err);
+}
 
 //导入登录页面组件
 import login from '../views/login/login.vue'
