@@ -147,20 +147,7 @@ export default {
   },
   //方法
   methods: {
-    //点击切换启用禁用
-    status(data) {
-      subject
-        .status({
-          id: data.id,
-          status: data.status === 1 ? 0 : 1
-        })
-        .then(res => {
-          if (res.data.code === 200) {
-            this.$message.success(res.data.message);
-          }
-        });
-    },
-
+    
     //把调用接口的事件直接封装成另一个函数,触发事件按钮的时候直接调用这个方法  getList()
     getList() {
       //调用接口 传递筛选条件
@@ -240,7 +227,24 @@ export default {
             message: "已取消删除"
           });
         });
-    }
+    },
+
+
+    //点击切换启用禁用
+    status(data) {
+      subject
+        .status({
+          id: data.id,
+          status: data.status === 1 ? 0 : 1
+        })
+        .then(res => {
+          if (res.data.code === 200) {
+            this.$message.success(res.data.message);
+            this.getList()
+          }
+        });
+    },
+
   }
 };
 </script>
