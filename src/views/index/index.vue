@@ -10,8 +10,8 @@
       </div>
       <!-- 右边 -->
       <div class="right">
-        <img class="index-icon" src="../../assets/index-icon.jpg" alt />
-        <span class="index-name">近来可好</span>
+        <img class="index-icon" :src="avatar" alt />
+        <span class="index-name">{{name}}</span>
         <el-button type="primary" size="mini" @click="logout">退出</el-button>
       </div>
     </el-header>
@@ -65,7 +65,12 @@ export default {
 
   data() {
     return {
-      isCollapse: false
+      //是否折叠
+      isCollapse: false,
+      //用户名
+      name:'',
+      //用户头像
+      avatar:'',
     };
   },
   //生命周期钩子
@@ -83,7 +88,9 @@ export default {
   //创建钩子
   created() {
     userInfo().then(res=>{
+      //获取用户头像
       this.avatar = `http://183.237.67.218:3002/${res.data.data.avatar}`
+      //获取用户名
       this.name=res.data.data.name
     })
   },
