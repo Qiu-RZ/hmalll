@@ -141,8 +141,7 @@ export default {
         this.tableData = res.data.data.items;
         //保存总条数
         this.total = res.data.data.pagination.total;
-
-        window.console.log(res);
+        //window.console.log(res);
       });
   },
   //方法
@@ -158,7 +157,7 @@ export default {
           this.tableData = res.data.data.items;
           // // 重新设置页容量即可
           this.total = res.data.data.pagination.total;
-          // window.console.log(res)
+          // ////window.console.log(res)
         });
     },
 
@@ -195,12 +194,12 @@ export default {
               this.addFormVisible = false;
               //重新刷新一次
               this.getList();
-              // this.$message.success("对啦");
+              // //this.$message.success("对啦");
               return;
             }
           });
         } else {
-          this.$message.success("小老弟,你传的数据有点不对劲哦");
+          //this.$message.success("小老弟,你传的数据有点不对劲哦");
           return false;
         }
       });
@@ -239,7 +238,7 @@ export default {
         })
         .then(res => {
           if (res.data.code === 200) {
-            this.$message.success(res.data.message);
+            //this.$message.success(res.data.message);
             this.getList()
           }
         });
