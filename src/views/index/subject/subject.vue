@@ -62,6 +62,8 @@
         :page-size="limit"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
       ></el-pagination>
     </el-card>
 
@@ -86,7 +88,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addFormVisible = false">取 消</el-button>
-        <el-button type="primary" >确 定</el-button>
+        <el-button type="primary">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -139,7 +141,7 @@ export default {
         this.tableData = res.data.data.items;
         //保存总条数
         this.total = res.data.data.pagination.total;
-        
+
         window.console.log(res);
       });
   },
@@ -159,8 +161,8 @@ export default {
         });
     },
 
-    //筛选搜索按钮
-    search() {
+    getList() {
+       //把调用接口的事件直接封装成另一个函数,触发事件按钮的时候直接调用这个方法  getList()
       //调用接口 传递筛选条件
       subject
         .list({ page: this.page, limit: this.limit, ...this.formInline })
@@ -171,8 +173,28 @@ export default {
           this.total = res.data.data.pagination.total;
           // window.console.log(res)
         });
+    },
+
+    //筛选搜索按钮
+    search() {
+      //点击筛选的时候改变页码起数,调用接口
+      this.page = 1;
+      this.getList();
+    },
+
+    //页容量改变
+    handleSizeChange(size) {
+      //直接存起来
+      this.limit = size;
+      //修改页码去第一页
+      this.page = 1;
+      this.getList();
+    },
+    //页码改变
+    handleCurrentChange(current) {
+      this.page = current;
+   this.getList();
     }
-     
   }
 };
 </script>
