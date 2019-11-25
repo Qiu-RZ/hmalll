@@ -45,7 +45,7 @@
         <el-table-column label="操作">
           <!-- 插槽 -->
           <template slot-scope="scope">
-            <el-button type="text">编辑</el-button>
+            <el-button type="text" @click="editList(scope.row)">编辑</el-button>
             <el-button
               @click="status(scope.row)"
               type="text"
@@ -91,6 +91,31 @@
         <el-button type="primary" @click="submitAdd">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 编辑对话框 -->
+    <el-dialog title="编辑学科" :visible.sync="editFormVisible" class="add-dialog">
+      <el-form :model="editForm" ref="editForm" :rules="editRules">
+        <el-form-item label="学科编号" prop="rid" :label-width="formLabelWidth">
+          <el-input v-model="editForm.rid" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学科名称" prop="name" :label-width="formLabelWidth">
+          <el-input v-model="editForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学科简称" :label-width="formLabelWidth">
+          <el-input v-model="editForm.short_name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学科简介" :label-width="formLabelWidth">
+          <el-input v-model="editForm.intro" type="textarea" :rows="2" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学科备注" :label-width="formLabelWidth">
+          <el-input v-model="editForm.remark" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitEdit">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -126,6 +151,17 @@ export default {
         name: [
           { required: true, message: "学科的科名不能为空哦", trigger: "blur" }
         ]
+      },
+      //编辑表单数据
+      editForm: {},
+      //编辑表单是否显示
+      editFormVisible: false,
+      //表单验证规则
+      editRules: {
+        rid: [{ required: true, message: "学科编号能为空哦", trigger: "blur" }],
+        name: [
+          { required: true, message: "学科的科名不能为空哦", trigger: "blur" }
+        ]
       }
     };
   },
@@ -146,7 +182,6 @@ export default {
   },
   //方法
   methods: {
-    
     //把调用接口的事件直接封装成另一个函数,触发事件按钮的时候直接调用这个方法  getList()
     getList() {
       //调用接口 传递筛选条件
@@ -199,7 +234,7 @@ export default {
             }
           });
         } else {
-          //this.$message.success("小老弟,你传的数据有点不对劲哦");
+          this.$message.success("小老弟,你传的数据有点不对劲哦");
           return false;
         }
       });
@@ -228,7 +263,6 @@ export default {
         });
     },
 
-
     //点击切换启用禁用
     status(data) {
       subject
@@ -239,11 +273,39 @@ export default {
         .then(res => {
           if (res.data.code === 200) {
             //this.$message.success(res.data.message);
-            this.getList()
+            this.getList();
           }
         });
     },
 
+    //点击编辑表单
+    editList(data) {
+      this.editFormVisible = true;
+      // window.console.log(data);
+      this.editForm = JSON.parse(JSON.stringify(data));
+    },
+    //保存修改
+    submitEdit() {
+      //表单验证规则
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          // alert("submit!");
+          //调用接口
+          subject.edit(this.editForm).then(res => {
+            if (res.data.code === 200) {
+              this.editFormVisible = false;
+              //重新刷新一次
+              this.getList();
+              // //this.$message.success("对啦");
+              return;
+            }
+          });
+        } else {
+          this.$message.success("小老弟,你传的数据有点不对劲哦");
+          return false;
+        }
+      });
+    }
   }
 };
 </script>
