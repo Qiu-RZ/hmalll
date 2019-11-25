@@ -5,10 +5,12 @@ import axios from 'axios';
 import { getToken,removeToken } from '../utils/token.js';
 // 导入 element-ui的弹框
 import { Message } from 'element-ui';
-//导入Vue
-import Vue from 'vue';
 
-Vue.use(Message);
+
+//在main里面已经写了,所以就不用写了
+//导入Vue
+// import Vue from 'vue';
+// Vue.use(Message);
 //导入路由
 import router from '../router/router.js';
 
@@ -42,7 +44,7 @@ axios.interceptors.request.use(
       // 判断token
       if (response.data.code === 0) {
           // 提示
-          Message.error('醒目一点ok???')
+          Message.error(response.data.message);
         // 删除token
         removeToken();
         // 去登录页
@@ -98,4 +100,51 @@ export function userInfo(data){
         data
     })
 }
+
+// 作用域 抽取学科接口
+// subject.add //subject.remove  通过对象点出来
+export const subject ={
+  // 新增
+  add(data){
+    return axios({
+      url:"/subject/add",
+      method:"post",
+      data
+    })
+  },
+  // 列表
+  // get请求的参数用params来传递
+  list(params){
+    return axios({
+      url:"/subject/list",
+      method:"get",
+      params
+    })
+  },
+  // 状态
+  status(data){
+    return axios({
+      url:"/subject/status",
+      method:"post",
+      data
+    })
+  },
+  // 编辑
+  edit(data){
+    return axios({
+      url:"/subject/edit",
+      method:"post",
+      data
+    })
+  },
+  // 删除
+  remove(data){
+    return axios({
+      url:"/subject/remove",
+      method:"post",
+      data
+    })
+  },
+}
+
 

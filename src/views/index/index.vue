@@ -83,8 +83,8 @@ export default {
   //创建钩子
   created() {
     userInfo().then(res=>{
-      
-      window.console.log(res)
+      this.avatar = `http://183.237.67.218:3002/${res.data.data.avatar}`
+      this.name=res.data.data.name
     })
   },
 
