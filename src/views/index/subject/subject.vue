@@ -68,7 +68,7 @@
     </el-card>
 
     <!-- 新增对话框 -->
-    <el-dialog title="新增学科" :visible.sync="addFormVisible" class="edit-dialog">
+    <el-dialog title="新增学科" :visible.sync="addFormVisible" class="add-dialog">
       <el-form :model="addForm" ref="addForm" :rules="addRules">
         <el-form-item label="学科编号" prop="rid" :label-width="formLabelWidth">
           <el-input v-model="addForm.rid" autocomplete="off"></el-input>
@@ -88,7 +88,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addFormVisible = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="submitAdd">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -161,8 +161,8 @@ export default {
         });
     },
 
+    //把调用接口的事件直接封装成另一个函数,触发事件按钮的时候直接调用这个方法  getList()
     getList() {
-       //把调用接口的事件直接封装成另一个函数,触发事件按钮的时候直接调用这个方法  getList()
       //调用接口 传递筛选条件
       subject
         .list({ page: this.page, limit: this.limit, ...this.formInline })
@@ -193,7 +193,30 @@ export default {
     //页码改变
     handleCurrentChange(current) {
       this.page = current;
-   this.getList();
+      this.getList();
+    },
+
+    //点击新增按钮
+    submitAdd() {
+      //表单验证规则
+      this.$refs.addForm.validate(valid => {
+        if (valid) {
+          // alert("submit!");
+          //调用接口
+          subject.add(this.addForm).then(res => {
+            if (res.data.code === 200) {
+              this.addFormVisible = false;
+              //重新刷新一次
+              this.getList();
+              // this.$message.success("对啦");
+              return;
+            }
+          });
+        } else {
+          this.$message.success("小老弟,你传的数据有点不对劲哦");
+          return false;
+        }
+      });
     }
   }
 };
@@ -223,7 +246,7 @@ export default {
   .res {
     color: red;
   }
-  .edit-dialog {
+  .add-dialog {
     .el-dialog__header {
       background-color: deepskyblue;
       text-align: center;
