@@ -70,7 +70,7 @@ export default {
       //用户名
       name:'',
       //用户头像
-      avatar:'',
+      avatar:"",
     };
   },
   //生命周期钩子
@@ -89,7 +89,7 @@ export default {
   created() {
     userInfo().then(res=>{
       //获取用户头像
-      this.avatar = `http://183.237.67.218:3002/${res.data.data.avatar}`
+      this.avatar = `${process.env.VUE_APP_BASEURL}/${res.data.data.avatar}`
       //获取用户名
       this.name=res.data.data.name
     })

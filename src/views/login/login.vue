@@ -67,7 +67,7 @@
         <el-form-item label="头像" :label-width="formLabelWidth">
           <el-upload
             class="avatar-uploader"
-            action="http://183.237.67.218:3002/uploads"
+            :action=action
             name="image"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
@@ -205,7 +205,7 @@ export default {
       },
 
       //获取验证码地址
-      captchaURL: "http://183.237.67.218:3002/captcha?type=login",
+      captchaURL: `${process.env.VUE_APP_BASEURL}/captcha?type=login`,
       //复选框按钮
       checked: true,
       //模态框
@@ -224,6 +224,8 @@ export default {
         // 图形验证码
         code: ""
       },
+      //注册头像
+      action:`${process.env.VUE_APP_BASEURL}/uploads`,
       //注册验证规则
       loginRureg: {
         //昵称
@@ -238,7 +240,7 @@ export default {
 
       formLabelWidth: "67px",
       //注册获取验证码
-      registerURL: "http://183.237.67.218:3002/captcha?type=sendsms",
+      registerURL: `${process.env.VUE_APP_BASEURL}/captcha?type=sendsms`,
       //短信验证的文本
       btnTxt: "获取短信验证码",
       //获取手机验证按钮
@@ -249,7 +251,7 @@ export default {
   methods: {
     //点击获取验证码
     changeCaptcha() {
-      this.captchaURL = `http://183.237.67.218:3002/captcha?type=login&${Date.now()}`;
+      this.captchaURL = `${process.env.VUE_APP_BASEURL}/captcha?type=login&${Date.now()}`;
     },
     //点击登录按钮:
     submitForm(formName) {
@@ -324,7 +326,7 @@ export default {
 
     //点击冲重新取注册验证码
     regURL() {
-      this.registerURL = `http://183.237.67.218:3002/captcha?type=sendsms&${Date.now()}`;
+      this.registerURL = `${process.env.VUE_APP_BASEURL}/captcha?type=sendsms&${Date.now()}`;
     },
     //获取手机短信之前对手机号做判断
     getMessage() {
