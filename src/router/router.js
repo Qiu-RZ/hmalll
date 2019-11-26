@@ -61,6 +61,7 @@ const routes = [
               path:"question", // 匹配的是 /index/question题库
               component:question
             },
+            
         ]
     },
 

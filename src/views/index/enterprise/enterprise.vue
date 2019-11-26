@@ -59,6 +59,9 @@
 </template>
 
 <script>
+
+//导入接口
+import { enterprise } from '../../../api/api.js'
 export default {
   name: "enterprise",
   data() {
