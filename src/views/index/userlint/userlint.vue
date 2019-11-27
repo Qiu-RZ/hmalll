@@ -63,7 +63,7 @@
     </el-card>
 
     <!-- 新增模块 -->
-    <el-dialog title="新增用户" :visible.sync="addFormVisible">
+    <el-dialog title="编辑用户" :visible.sync="addFormVisible">
       <el-form :model="addForm" ref="addForm" :rules="addRules">
         <el-form-item label="用户名" prop="name" :label-width="formLabelWidth">
           <el-input v-model="addForm.name" autocomplete="off"></el-input>
@@ -97,6 +97,44 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="addFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitAdd">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 编辑模块 -->
+    <el-dialog title="编辑用户" :visible.sync="editFormVisible">
+      <el-form :model="editForm" ref="editForm" :rules="addRules">
+        <el-form-item label="用户名" prop="name" :label-width="formLabelWidth">
+          <el-input v-model="editForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email" :label-width="formLabelWidth">
+          <el-input v-model="editForm.email" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="phone" :label-width="formLabelWidth">
+          <el-input v-model="editForm.phone" autocomplete="off"></el-input>
+        </el-form-item>
+        <!-- 下拉框的 角色-->
+        <el-form-item label="角色" class="more-width">
+          <el-select v-model="editForm.role" placeholder="请选择角色">
+            <el-option label="管理员" value="管理员"></el-option>
+            <el-option label="老师" value="老师"></el-option>
+            <el-option label="学生" value="学生"></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- 下拉框 状态 -->
+        <el-form-item label="状态" class="more-width">
+          <el-select v-model="editForm.status" placeholder="请选择状态">
+            <el-option label="启用" :value="1"></el-option>
+            <el-option label="禁用" :value="0"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="用户备注" :label-width="formLabelWidth">
+          <el-input v-model="editForm.remark" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitEdit">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -158,14 +196,19 @@ export default {
       formLabelWidth: "100px",
       //新增数据
       addForm: {},
-      //新增验证规则
+      //新增验证规则和编辑验证规则
       addRules: {
         name: [
           { required: true, message: "用户名不能为空哦", trigger: "blur" }
         ],
         email: [{ validator: checkEmail, required: true }],
         phone: [{ validator: checkAge, required: true }]
-      }
+      },
+
+      //编辑弹框是否显示
+      editFormVisible: false,
+      //编辑数据
+      editForm: {}
     };
   },
   //生命周期钩子
@@ -242,14 +285,36 @@ export default {
       this.$refs.addForm.validate(valid => {
         if (valid) {
           user.add(this.addForm).then(res => {
-            if(res.data.code === 200){
-              this.$message.success('新增成功');
+            if (res.data.code === 200) {
+              this.$message.success("新增成功");
               this.addFormVisible = false;
               this.getlist();
             }
           });
         } else {
           this.$message.error("数据不对劲呢");
+          return;
+        }
+      });
+    },
+    //编辑按钮
+    editForms(data) {
+      this.editFormVisible = true;
+      this.editForm = JSON.parse(JSON.stringify(data));
+    },
+    //编辑确认按钮
+    submitEdit() {
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          user.edit(this.editForm).then(res => {
+            if (res.data.code === 200) {
+              this.editFormVisible = false;
+              this.$message.success("编辑成功");
+              this.getlist();
+            }
+          });
+        } else {
+          this.$message.error("数据不对哦");
           return;
         }
       });
