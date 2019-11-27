@@ -152,6 +152,7 @@ export const subject = {
   },
 };
 
+//企业接口
 export const enterprise = {
   // 新增
   add(data) {
@@ -190,6 +191,50 @@ export const enterprise = {
   remove(data) {
     return axios({
       url: "/enterprise/remove",
+      method: "post",
+      data
+    })
+  },
+};
+//用户接口
+export const user = {
+  // 新增
+  add(data) {
+    return axios({
+      url: "/user/add",
+      method: "post",
+      data
+    })
+  },
+  // 列表
+  // get请求的参数用params来传递
+  list(params) {
+    return axios({
+      url: "/user/list",
+      method: "get",
+      params
+    })
+  },
+  // 状态
+  status(data) {
+    return axios({
+      url: "/user/status",
+      method: "post",
+      data
+    })
+  },
+  // 编辑
+  edit(data) {
+    return axios({
+      url: "/user/edit",
+      method: "post",
+      data
+    })
+  },
+  // 删除
+  remove(data) {
+    return axios({
+      url: "/user/remove",
       method: "post",
       data
     })
