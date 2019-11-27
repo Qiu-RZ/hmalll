@@ -282,7 +282,7 @@ export default {
             password: this.loginForm.password,
             code: this.loginForm.captcha
           }).then(res => {
-            window.console.log(res);
+            // window.console.log(res);
             if (res.data.code == 200) {
               // 成功
               this.$message.success("你可算回来啦！");
