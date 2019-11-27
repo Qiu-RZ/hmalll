@@ -61,6 +61,44 @@
         @current-change="handleCurrentChange"
       ></el-pagination>
     </el-card>
+
+    <!-- 新增模块 -->
+    <el-dialog title="新增用户" :visible.sync="addFormVisible">
+      <el-form :model="addForm" ref="addForm" :rules="addRules">
+        <el-form-item label="用户名" prop="name" :label-width="formLabelWidth">
+          <el-input v-model="addForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email" :label-width="formLabelWidth">
+          <el-input v-model="addForm.email" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="phone" :label-width="formLabelWidth">
+          <el-input v-model="addForm.phone" autocomplete="off"></el-input>
+        </el-form-item>
+        <!-- 下拉框的 角色-->
+        <el-form-item label="角色" class="more-width">
+          <el-select v-model="addForm.role" placeholder="请选择角色">
+            <el-option label="管理员" value="管理员"></el-option>
+            <el-option label="老师" value="老师"></el-option>
+            <el-option label="学生" value="学生"></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- 下拉框 状态 -->
+        <el-form-item label="状态" class="more-width">
+          <el-select v-model="addForm.status" placeholder="请选择状态">
+            <el-option label="启用" value="1"></el-option>
+            <el-option label="禁用" value="0"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="用户备注" :label-width="formLabelWidth">
+          <el-input v-model="addForm.remark" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitAdd">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -82,7 +120,15 @@ export default {
       //页码数组
       pageSize: [5, 10, 15, 20],
       //总条数
-      total: 0
+      total: 0,
+      //新增弹框显示
+      addFormVisible: false,
+      //输入框宽度
+      formLabelWidth: "100px",
+      //新增数据
+      addForm: {},
+      //新增验证规则
+      addRules: {}
     };
   },
   //生命周期钩子
@@ -130,9 +176,29 @@ export default {
       this.getlist();
     },
     //页码数
-    handleCurrentChange(current){
+    handleCurrentChange(current) {
       this.page = current;
       this.getlist();
+    },
+
+    //点击切换状态
+    status(data) {
+      // window.console.log(data)
+      user
+        .status({
+          id: data.id,
+          status: data.status === 1 ? 0 : 1
+        })
+        .then(res => {
+          if (res.data.code === 200) {
+            this.tableData.status = res.data.data.status;
+            this.getlist();
+          }
+        });
+    },
+    //新增按钮
+    addEnter() {
+      this.addFormVisible = true;
     }
   }
 };
@@ -156,6 +222,20 @@ export default {
   // card的样式
   .main-card {
     margin-top: 20px;
+  }
+  .red {
+    color: red;
+  }
+  //弹框样式
+  .el-dialog__header {
+    background-color: deepskyblue;
+    text-align: center;
+    .el-dialog__title {
+      color: white;
+    }
+  }
+  .el-input__inner {
+    width: 100%;
   }
 }
 </style>
