@@ -33,7 +33,7 @@
         <el-table-column prop="phone" label="电话"></el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
         <el-table-column prop="role" label="角色"></el-table-column>
-        <el-table-column prop="create_time" label="备注"></el-table-column>
+        <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
             <span v-if="scope.row.status === 0" class="red">禁用</span>
@@ -85,8 +85,8 @@
         <!-- 下拉框 状态 -->
         <el-form-item label="状态" class="more-width">
           <el-select v-model="addForm.status" placeholder="请选择状态">
-            <el-option label="启用" value="1"></el-option>
-            <el-option label="禁用" value="0"></el-option>
+            <el-option label="启用" :value="1"></el-option>
+            <el-option label="禁用" :value="0"></el-option>
           </el-select>
         </el-form-item>
 
@@ -109,6 +109,37 @@ import { user } from "../../../api/api";
 export default {
   name: "userlint",
   data() {
+    //自定义手机验证规则
+    const checkAge = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("手机号不能为空"));
+      } else {
+        const res = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
+        if (res.test(value)) {
+          callback();
+        } else {
+          callback(new Error("手机号格式不对哦"));
+        }
+      }
+    };
+    //检验邮箱格式
+    const checkEmail = (rules, value, callback) => {
+      // value是值
+      if (!value) {
+        callback(new Error("邮箱不能为空"));
+      } else {
+        // 格式验证
+        const reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+        // 验证
+        if (reg.test(value)) {
+          // 对的
+          callback();
+        } else {
+          // 错误
+          callback(new Error("邮箱格式不对哦"));
+        }
+      }
+    };
     return {
       formInline: {},
       //表格数据
@@ -128,7 +159,13 @@ export default {
       //新增数据
       addForm: {},
       //新增验证规则
-      addRules: {}
+      addRules: {
+        name: [
+          { required: true, message: "用户名不能为空哦", trigger: "blur" }
+        ],
+        email: [{ validator: checkEmail, required: true }],
+        phone: [{ validator: checkAge, required: true }]
+      }
     };
   },
   //生命周期钩子
@@ -199,6 +236,23 @@ export default {
     //新增按钮
     addEnter() {
       this.addFormVisible = true;
+    },
+    //新增确认按钮
+    submitAdd() {
+      this.$refs.addForm.validate(valid => {
+        if (valid) {
+          user.add(this.addForm).then(res => {
+            if(res.data.code === 200){
+              this.$message.success('新增成功');
+              this.addFormVisible = false;
+              this.getlist();
+            }
+          });
+        } else {
+          this.$message.error("数据不对劲呢");
+          return;
+        }
+      });
     }
   }
 };
