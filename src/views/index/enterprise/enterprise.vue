@@ -46,7 +46,7 @@
         <el-table-column label="操作">
           <!-- 插槽 -->
           <template slot-scope="scope">
-            <el-button type="text">编辑</el-button>
+            <el-button type="text" @click="editForms(scope.row)">编辑</el-button>
             <el-button type="text" @click="status(scope.row)">{{ scope.row.status === 1?"禁用":"启用" }}</el-button>
             <el-button type="text" @click="reomveEnter(scope.row)">删除</el-button>
           </template>
@@ -97,6 +97,39 @@
         <el-button type="primary" @click="submitAdd">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 编辑弹框 -->
+    <el-dialog title="新增企业" :visible.sync="editFormVisible">
+      <el-form :model="editForm" ref="editForm" :rules="editRules">
+        <el-form-item label="企业编号" prop="eid" :label-width="formLabelWidth">
+          <el-input v-model="editForm.eid" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="企业名称" prop="name" :label-width="formLabelWidth">
+          <el-input v-model="editForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <!-- 下拉框的 所属领域 -->
+        <el-form-item label="所属领域" class="more-width">
+          <el-select v-model="editForm.tag" placeholder="请选择状态">
+            <el-option label="金融" value="金融"></el-option>
+            <el-option label="互联网" value="互联网"></el-option>
+            <el-option label="电商" value="电商"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="企业简称" :label-width="formLabelWidth">
+          <el-input v-model="editForm.short_name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学科简介" :label-width="formLabelWidth">
+          <el-input v-model="editForm.intro" type="textarea" :rows="2" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学科备注" :label-width="formLabelWidth">
+          <el-input v-model="editForm.remark" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitEdit">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -126,6 +159,19 @@ export default {
       formLabelWidth: "100px",
       //表单验证规则
       addRules: {
+        eid: [
+          { required: true, message: "企业编号不能为空哦", trigger: "blur" }
+        ],
+        name: [
+          { required: true, message: "企业名称不能为空哦", trigger: "blur" }
+        ]
+      },
+      //编辑弹框是否显示
+      editFormVisible: false,
+      //编辑弹框
+      editForm: {},
+      //编辑表单验证规则
+      editRules: {
         eid: [
           { required: true, message: "企业编号不能为空哦", trigger: "blur" }
         ],
@@ -216,15 +262,55 @@ export default {
     handleCurrentChange(current) {
       (this.page = current), this.getlist();
     },
-    
+
     //删除
-    // reomveEnter(data) {
-    //   enterprise.remove({ id: data.id }).then(res => {
-    //      if(res.data.code === 200 ){
-    //        this.getlist()
-    //      }
-    //   });
-    // }
+    reomveEnter(data) {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // window.console.log(data);
+          enterprise.remove({ id: data.id }).then(res => {
+            if (res.data.code === 200) {
+              this.$message.success("删除成功"),
+                //重新刷新
+                this.getlist();
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    //编辑弹框
+    editForms(data) {
+      this.editFormVisible = true;
+      // window.console.log(data);
+      // this.editForm = data;
+      this.editForm = JSON.parse(JSON.stringify(data))
+    },
+    //编辑点击弹框确认按钮
+    submitEdit() {
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          enterprise.edit(this.editForm).then(res => {
+            if (res.data.code === 200) {
+              this.$message.success("编辑成功");
+              this.editFormVisible = false,
+              this.getlist();
+              return;
+            }
+          });
+        }else{
+              this.$message.success('小老弟你传的数据有点不对劲哦')
+            }
+      });
+    }
   }
 };
 </script>
